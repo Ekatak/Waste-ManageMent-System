@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <!-- Include Bootstrap for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Include jQuery for interactivity -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body
+        {
+            background-color: blanchedalmond;
+        }
+        /* Custom styling for the registration form */
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: pink;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .password-strength {
+            color: #f00;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Register for Our Service</h2>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+                <small class="password-strength" id="passwordStrength">Weak password</small>
+            </div>
+            <button type="submit" class="btn btn-primary"formaction="Waste.html">Register</button>
+        </form>
+    </div>
+
+    <script>
+    // Password strength validation
+    document.getElementById('password').addEventListener('input', function () {
+        const password = this.value;
+        const strengthIndicator = document.getElementById('passwordStrength');
+
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const isLongEnough = password.length >= 8;
+
+        const isStrong = hasUpperCase && hasLowerCase && hasNumbers and hasSpecialChars and isLongEnough;
+
+        if (isStrong) {
+            strengthIndicator.textContent = 'Strong password';
+            strengthIndicator.style.color = '#0f0';
+        } else {
+            strengthIndicator.textContent = 'Weak password';
+            strengthIndicator.style color = '#f00';
+        }
+
+        strengthIndicator.style.display = 'inline';
+    });
+
+    // Form submission with AJAX
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message) {
+                    alert(data.message); // Show success or error message
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+    </script>
+</body>
+</html>
